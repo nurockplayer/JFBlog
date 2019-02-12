@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no">
+    <!-- Will be replace the page title -->
+    <title>{% block title %}Home{% endblock %}</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous"> 
+
+    <!-- Macro: 'render paginate' -->
+    {% macro render_pagination(pagination, endpoint) %}
+    <nav>
+    <ul class="pagination">
+        <li>
+            {% if pagination.has_prev %}
+                <a href="{{ url_for('blog.home', page=pagination.prev().page) }}" aria-label="Previous">
+            {% else %}
+                <a href="{{ url_for('blog.home', page=1) }}" aria-label="Previous">
+            {% endif %}
+                <span aria-label="true">&laquo;</span>
+            </a>
+        </li>
+        {% for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page != pagination.page %}
+                    <li>
+                        <a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a>
+                    </li>
+                {% else %}
+                    <li><a href="">{{ page }}</a></li>
+                {% endif %}
+            {% else %}
+                <li><a>...</a></li>
+            {% endif %}
+        {% endfor %}
+        <li>
+            <ahref="{{ url_for('blog.home', page=pagination.next().page) }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+    </nav>
+    {% endmacro %}
+    
+    {% block captcha %}
+    {% endblock %}
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <!-- Replace the route function to URL: '/' -->
+            <h1 class="display-5">
+                <a href="{{ url_for('blog.home') }} ">Tachikoma's Blog</a>
+            </h1>
+            <p class="lead">Welcome to the blog!</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="button" class="close" data-dismiss="alert" aria-label=Close>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ messages }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block body %}
+            body_content
+        {% endblock %}
+        
+    </div>
+
+
+    {% block js %}
+    
+    {% endblock %}
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script> 
+    
+</body>
+</html>

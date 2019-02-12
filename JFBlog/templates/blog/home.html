@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}
+    Tachikoma's Blog
+{% endblock %}
+
+{% block body %}
+
+<div class="row">
+    <div class="col-lg-9">
+        {% for post in posts.items %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1> {{ post.title }} </h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    {{ post.text | truncate(255) | safe }}
+                    <!-- Set the link for read more -->
+                    <a href="{{ url_for('blog.post', post_id=post.id) }}">Read More</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-lg-3">
+        <div class="row">
+            <h5>Recent Posts</h5>
+            <ul>
+                {% for post in recent %}
+                <!-- Set the link for recent posts. -->
+                    <li><a href="{{ url_for('blog.post', post_id=post.id) }}">{{ post.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="row">
+            <h5>Popular Tags</h5>
+            <ul>
+                {% for tag in top_tags %}
+                    <li><a href="{{ url_for('blog.tag', tag_name=tag[0].name) }}">{{ tag[0].name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {{ render_pagination(posts, 'blog.home') }}
+
+</div>
+
+
+{% endblock %}
